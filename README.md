@@ -1,13 +1,13 @@
 # Introduction
 
-This project is based on the work of LMtx (https://github.com/LMtx/ansible-lab-docker.git) with these changes:
+This project is based on the work of LMtx (https://github.com/LMtx/ansible-lab-docker.git). Here the changes:
 
 * switched base image from Ubuntu to Centos 7
-* removed ssh-agent and password protection from ssh key
-* added ansible.cfg in lab directory for custom configuration
-* created all-in-one Vagrant machine (centos7 + docker + containers) for users can't install directly docker
-* added port-forward to access directly master01 container from main host (root@localhost:1022)
-* added "screen" multiplexer to have an overview of all four "server" from a single terminal window
+* removed ssh-agent and password protection for ssh key
+* added ansible.cfg in lab directory for custom configuration and inventory
+* created all-in-one Vagrant machine (centos7 + docker + containers) for users can't install docker
+* added port-forward to access master01 container directly from the host (root@localhost:1022)
+* added "screen" (teminal multiplexer) to have an overview of all four "servers" from a single terminal window
 
 The aim of this guide is setup of [Ansible](https://www.ansible.com/) training environment using [Docker](https://www.docker.com/) containers. After finishing this tutorial you will have Docker master container that can manage three host containers (you can easily extend number of managed hosts to meet your needs).
 
@@ -15,7 +15,7 @@ Why I decided to use Docker instead of conventional virtualization like [Virtual
 
 This Ansible lab is composed of four containers:
 
-* master01: ansible node
+* master01
 * host01
 * host02
 * host03
@@ -36,27 +36,27 @@ If you are on a Linux server with docker already installed enter directory conta
 
 `docker-compose up -d`
 
-If you need a VM to run the lab install Vagrant and you hypervisor (tested with virtualbox and libvirt) and run:
+If you need a VM to run the lab install Vagrant and your hypervisor (tested with virtualbox and libvirt) and run:
 
-`vagrant up`
+`vagrant up
 vagrant ssh`
 
 ## Connect to **master node** (master01):
 
-From the host running docker run:
+From the docker host run:
 
 `docker exec -it master01 bash`
 
-or from vagrant:
+or from the host running Vagrant machine:
 
 `vagrant ssh
 vagrant@ansible-lab $ sudo docker exec -it master01 bash`
 
-or direcly from your host to master01 container (it exposes 1022 port to sshd service and Vagrant simply forwards host:1022 to guest:1022):
+or conect direcly from your host to master01 container (it exposes host:1022 to container:22 and Vagrant forwards host:1022 to guest:1022):
 
 `ssh root@localhost -p 1022 # password is ansiblelab`
 
-here you can start "screen" to have four windows opened on master01, host01, host02 and host03 (F11 or F12 to switch windows or regular screen command CTRL+a+n, CTRL+a+p):
+here you can start "screen" to have four windows already opened on master01, host01, host02 and host03 (F11 or F12 to switch from one window to another or use standard screen commands such as CTRL+a+n, CTRL+a+p):
 
 `screen`
 
@@ -64,7 +64,7 @@ Verify if network connection is working between master and managed hosts:
 
 `ping -c 2 host01`
 
-or with ansible ad-hoc command:
+then verifify is master can connect to all managed hosts with an ansible ad-hoc command:
 
 `ansible -m ping all`
 
@@ -73,12 +73,6 @@ or with ansible ad-hoc command:
 Run a [sample ansible playbook](./examples/ping_all.yml) that checks connection between master node and managed hosts:
 
 `ansible-playbook -i examples/inventory ping_all.yml`
-
-Install PHP on web **inventory group**:
-
-Run a [sample ansible playbook](./examples/install_php.yml):
-
-`ansible-playbook examples/install_php.yml`
 
 ## Copy data between local file system and containers
 
