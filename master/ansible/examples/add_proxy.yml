@@ -1,0 +1,7 @@
+---
+- hosts: all
+  tasks:
+    - name: add proxy to yum.conf
+      lineinfile:
+        path: /etc/yum.conf
+        line: 'proxy=http://myproxy:8080'
