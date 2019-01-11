@@ -20,7 +20,7 @@ This Ansible lab is composed of four containers:
 * host02
 * host03
 
-**IMPORTANT**: In order to follow this tutorial you need to install Docker or Vagrant on your machine.
+**IMPORTANT**: In order to follow this tutorial you need to install Docker or Vagrant on your host machine.
 
 # Quick start
 
@@ -38,8 +38,8 @@ If you are on a Linux server with docker already installed enter directory conta
 
 If you need a VM to run the lab install Vagrant and your hypervisor (tested with virtualbox and libvirt) and run:
 
-`vagrant up
-vagrant ssh`
+    vagrant up
+    vagrant ssh
 
 ## Connect to **master node** (master01):
 
@@ -49,10 +49,10 @@ From the docker host run:
 
 or from the host running Vagrant machine:
 
-`vagrant ssh
-vagrant@ansible-lab $ sudo docker exec -it master01 bash`
+    vagrant ssh
+    vagrant@ansible-lab $ sudo docker exec -it master01 bash`
 
-or conect direcly from your host to master01 container (it exposes host:1022 to container:22 and Vagrant forwards host:1022 to guest:1022):
+or connect direcly from your host to master01 container (it exposes host:1022 to container:22 and Vagrant forwards host:1022 to guest:1022):
 
 `ssh root@localhost -p 1022 # password is ansiblelab`
 
@@ -68,6 +68,11 @@ then verifify is master can connect to all managed hosts with an ansible ad-hoc 
 
 `ansible -m ping all`
 
+If you don't use "screen" open other ssh sessions to host01, host02 and host03 and run the check from master01:
+
+    cd /opt/ansible-lab
+    ansible -m ping all
+    
 ## Ansible playbooks
 
 Run a [sample ansible playbook](./examples/ping_all.yml) that checks connection between master node and managed hosts:
