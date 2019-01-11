@@ -7,12 +7,18 @@ services:
   base:
     build: 
       context: ./base/
+#      args:
+#        http_proxy: myproxy:port
+#        https_proxy: myproxy:port
     image: ansible_base
   master:
     links:
       - base
     build: 
       context: ./master/
+#      args:
+#        http_proxy: myproxy:port
+#        https_proxy: myproxy:port
     image: ansible_master
     container_name: master01
     restart: always
@@ -28,6 +34,9 @@ services:
       - master
     build:
       context: ./host/
+#      args:
+#        http_proxy: myproxy:port
+#        https_proxy: myproxy:port
     image: ansible_host
     container_name: host01
     restart: always
