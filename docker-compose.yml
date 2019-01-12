@@ -25,7 +25,7 @@ services:
     hostname: master01
     command: ["/usr/sbin/sshd","-D"]
     ports:
-      - "1022:22"
+      - "2022:22"
     volumes:
       - ansible_vol:/opt/ansible-lab
   host:

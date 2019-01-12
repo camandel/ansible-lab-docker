@@ -36,6 +36,7 @@ If you are on a Linux server with docker already installed enter directory conta
 
 `docker-compose up -d`
 
+## Run a Vagrant machine
 If you need a VM to run the lab install Vagrant and your hypervisor (tested with virtualbox and libvirt) and run:
 
     vagrant up
@@ -52,9 +53,9 @@ or from the host running Vagrant machine:
     vagrant ssh
     vagrant@ansible-lab $ sudo docker exec -it master01 bash`
 
-or connect direcly from your host to master01 container (it exposes host:1022 to container:22 and Vagrant forwards host:1022 to guest:1022):
+or connect direcly from your host to master01 container (it exposes host:1022 to container:22 and Vagrant forwards host:2022 to guest:2022):
 
-`ssh root@localhost -p 1022 # password is ansiblelab`
+`ssh root@localhost -p 2022 # password is ansiblelab`
 
 here you can start "screen" to have four windows already opened on master01, host01, host02 and host03 (F11 or F12 to switch from one window to another or use standard screen commands such as CTRL+a+n, CTRL+a+p):
 
