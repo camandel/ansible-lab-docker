@@ -5,45 +5,53 @@ volumes:
 
 services:
   base:
-    build: 
+    build:
       context: ./base/
-#      args:
-#        http_proxy: myproxy:port
-#        https_proxy: myproxy:port
+      args:
+        - http_proxy
+        - https_proxy
     image: ansible_base
+    command: /bin/true
   master:
     links:
       - base
-    build: 
+    build:
       context: ./master/
-#      args:
-#        http_proxy: myproxy:port
-#        https_proxy: myproxy:port
+      args:
+        - http_proxy
+        - https_proxy
     image: ansible_master
     container_name: master01
     restart: always
     hostname: master01
-    command: ["/usr/sbin/sshd","-D"]
     ports:
       - "2022:22"
     volumes:
       - ansible_vol:/opt/ansible-lab
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
   host:
     links:
       - base
       - master
     build:
       context: ./host/
-#      args:
-#        http_proxy: myproxy:port
-#        https_proxy: myproxy:port
+      args:
+        - http_proxy
+        - https_proxy
     image: ansible_host
     container_name: host01
     restart: always
     hostname: host01
-    command: ["/run.sh"]
+    ports:
+      - "8001:80"
     volumes:
       - ansible_vol:/opt/ansible-lab
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    environment:
+      - http_proxy
+      - https_proxy
+    privileged: true
   host02:
     links:
       - base
@@ -53,9 +61,15 @@ services:
     container_name: host02
     restart: always
     hostname: host02
-    command: ["/run.sh"]
+    ports:
+      - "8002:80"
     volumes:
       - ansible_vol:/opt/ansible-lab
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    environment:
+      - http_proxy
+      - https_proxy
+    privileged: true
   host03:
     links:
       - base
@@ -65,7 +79,12 @@ services:
     container_name: host03
     restart: always
     hostname: host03
-    command: ["/run.sh"]
+    ports:
+      - "8003:80"
     volumes:
       - ansible_vol:/opt/ansible-lab
-
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    environment:
+      - http_proxy
+      - https_proxy
+    privileged: true
