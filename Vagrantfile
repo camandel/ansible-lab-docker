@@ -4,6 +4,9 @@ Vagrant.configure('2') do |config|
   config.vm.box = "centos/7"
 
   config.vm.network :forwarded_port, guest: 2022, host: 2022
+  config.vm.network :forwarded_port, guest: 8001, host: 8001
+  config.vm.network :forwarded_port, guest: 8002, host: 8002
+  config.vm.network :forwarded_port, guest: 8003, host: 8003
 
   config.vm.provider :virtualbox do |vb|
     vb.name = 'ansible-lab'
@@ -23,6 +26,6 @@ Vagrant.configure('2') do |config|
     SHELL
   end
 
-  config.vm.post_up_message = "To connect directly to master01 from your PC:\n\n  ssh root@localhost -p 2022 (password is ansiblelab)\n\nthen type 'screen' to connect to host01m host02 and host03"
+  config.vm.post_up_message = "To connect directly to master01 from your PC:\n\n  ssh root@localhost -p 2022 (password is ansiblelab)\n\nthen type 'screen' to connect to host01m host02 and host03\n\nLocal ports 800[1-2] will be redirected to port 80 of host0[1-3]"
 
 end
