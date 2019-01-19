@@ -2,7 +2,7 @@
 
 This project is based on the work of LMtx (https://github.com/LMtx/ansible-lab-docker.git). Here the changes:
 
-* switched base image from Ubuntu to Centos 7
+* switched base image from Ubuntu to Centos 7 with systemd
 * removed ssh-agent and password protection for ssh key
 * added ansible.cfg in lab directory for custom configuration and inventory
 * created all-in-one Vagrant machine (centos7 + docker + containers) for users can't install docker
@@ -74,6 +74,11 @@ If you don't use "screen" open other ssh sessions to host01, host02 and host03 a
     cd /opt/ansible-lab
     ansible -m ping all
     
+To play with http services these port-forwarding have been activated:
+
+    localhost:8001 -> host01:80
+    localhost:8002 -> host02:80   
+    localhost:8003 -> host03:80
 ## Ansible playbooks
 
 Run a [sample ansible playbook](./examples/ping_all.yml) that checks connection between master node and managed hosts:
