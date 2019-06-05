@@ -1,0 +1,9 @@
+Description=App Service
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /tmp/app.py
+
+[Install]
+WantedBy=multi-user.target

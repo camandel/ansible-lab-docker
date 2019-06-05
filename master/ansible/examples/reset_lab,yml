@@ -1,0 +1,15 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Stop and disable services
+      service:
+        name: "{{ item }}"
+        state: stopped
+        enabled: false
+      with_items:
+        - httpd
+        - nginx
+        - mariadb-server
+        - app
+      ignore_errors: true

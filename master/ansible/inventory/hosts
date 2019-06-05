@@ -1,4 +1,10 @@
 [web]
 host0[1:2] ansible_user=root ansible_ssh_private_key_file=/opt/ansible-lab/keys/master01_key
+[lb]
+host03 ansible_user=root ansible_ssh_private_key_file=/opt/ansible-lab/keys/master01_key
+[fe]
+host01 ansible_user=root ansible_ssh_private_key_file=/opt/ansible-lab/keys/master01_key
+[be]
+host02 ansible_user=root ansible_ssh_private_key_file=/opt/ansible-lab/keys/master01_key
 [db]
 host03 ansible_user=root ansible_ssh_private_key_file=/opt/ansible-lab/keys/master01_key

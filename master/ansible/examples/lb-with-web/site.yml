@@ -1,0 +1,56 @@
+---
+- hosts: web
+  tasks:
+    - name: Install httpd
+      yum:
+        name: httpd
+        state: present
+    - name: create index.html
+      template:
+         src: /opt/ansible-lab/examples/lb-with-web/index.html.j2
+         dest: /var/www/html/index.html
+      notify: restart_httpd
+    - name: start and enable httpd
+      service:
+        name: httpd
+        state: started
+        enabled: true
+    - name: check home page
+      uri:
+        url: "http://{{ item }}"
+      with_items: "{{ groups['web'] }}"
+      delegate_to: localhost
+      run_once: true
+
+  handlers:
+    - name: restart_httpd
+      service:
+        name: httpd
+        state: restarted
+
+- hosts: lb
+  tasks:
+    - name: add EPEL repo
+      yum:
+        name: epel-release.noarch
+        state: present
+    - name: Install nginx
+      yum:
+        name: nginx
+        state: present
+    - name: create index.html
+      template:
+        src: /opt/ansible-lab/examples/lb-with-web/nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+      notify: restart_nginx
+    - name: start and enable nginx
+      service:
+        name: nginx
+        state: started
+        enabled: true
+
+  handlers:
+    - name: restart_nginx
+      service:
+        name: nginx
+        state: restarted

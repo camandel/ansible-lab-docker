@@ -1,0 +1,7 @@
+---
+- hosts: all,localhost
+  tasks:
+    - name: Install vim-enhanced
+      yum:
+        name: vim-enhanced
+        state: present

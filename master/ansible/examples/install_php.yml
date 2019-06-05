@@ -1,5 +1,0 @@
----
-- hosts: web
-  tasks:
-    - name: Install PHP
-      yum: name=php-cli state=present 
