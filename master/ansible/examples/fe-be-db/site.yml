@@ -20,7 +20,10 @@
        state: present
        password: mypassword
        priv: 'mydb.*:ALL'
-       host: '{{ inventory_hostname }}%'
+       host: '{{ item }}'
+     with_items:
+       - "%"
+       - localhost
    - name: Copy database dump file
      copy:
        src: /opt/ansible-lab/examples/fe-be-db/dump.sql

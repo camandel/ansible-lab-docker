@@ -48,6 +48,12 @@
         name: nginx
         state: started
         enabled: true
+    - name: check home page
+      uri:
+        url: "http://{{ item }}"
+      with_items: "{{ groups['lb'] }}"
+      delegate_to: localhost
+      run_once: true
 
   handlers:
     - name: restart_nginx
