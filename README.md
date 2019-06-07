@@ -8,6 +8,8 @@ This project is based on the work of LMtx (https://github.com/LMtx/ansible-lab-d
 * created all-in-one Vagrant machine (centos7 + docker + containers) for users can't install docker
 * added port-forward to access master01 container directly from the host (root@localhost:1022)
 * added "screen" (teminal multiplexer) to have an overview of all four "servers" from a single terminal window
+* added port-forward to access host01, host02 and host03 containers on port 80 directly from the host (http://localhost:8001, 8002 and 8003)
+* added [examples](master/ansible/examples/) and [exercises](EXERCISES.md)
 
 The aim of this guide is setup of [Ansible](https://www.ansible.com/) training environment using [Docker](https://www.docker.com/) containers. After finishing this tutorial you will have Docker master container that can manage three host containers (you can easily extend number of managed hosts to meet your needs).
 
@@ -24,11 +26,24 @@ This Ansible lab is composed of four containers:
 
 # Quick start
 
+## Linux requirements
+- docker
+- docker-compose
+- git (optional, you can [download](https://github.com/camandel/ansible-lab-docker/archive/master.zip) the zip file of this repository)
+
+It is not necessary but if you prefer run docker inside a VM install libvirt (or virtualbox) and vagrant.
+## Windows requirements
+- [virtualbox](https://www.virtualbox.org/wiki/Downloads)
+- [vagrant](https://www.vagrantup.com/downloads.html)
+- [git](https://git-scm.com/download) (optional, you can [download](https://github.com/camandel/ansible-lab-docker/archive/master.zip) the zip file of this repository)
+- [putty](https://www.putty.org/) (optional, you can use any ssh client for Windows)
 ## Clone repository
 
 Clone this git repository:
 
 `git clone https://github.com/camandel/ansible-lab-docker.git`
+
+or [download](https://github.com/camandel/ansible-lab-docker/archive/master.zip) and extract the zip file.
 
 ## Build images and run containers
 
@@ -53,7 +68,7 @@ or from the host running Vagrant machine:
     vagrant ssh
     vagrant@ansible-lab $ sudo docker exec -it master01 bash`
 
-or connect direcly from your host to master01 container (it exposes host:1022 to container:22 and Vagrant forwards host:2022 to guest:2022):
+or connect direcly from your host to master01 container (it exposes host:2022 to container:22 and Vagrant forwards host:2022 to guest:2022):
 
 `ssh root@localhost -p 2022 # password is ansiblelab`
 
