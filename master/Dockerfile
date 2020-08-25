@@ -4,7 +4,8 @@
 FROM ansible_base:latest
 
 # install ansible package
-RUN yum install -y ansible openssh-clients screen && yum clean all && rm -rf /var/cache/yum
+
+RUN dnf install -y centos-release-ansible-29 epel-release && dnf install -y ansible openssh-clients screen passwd && yum clean all && rm -rf /var/cache/yum
 
 # copy content of ansible directory from local disk to file system inside Docker image
 COPY ansible /opt/ansible-lab/
@@ -16,6 +17,6 @@ WORKDIR /opt/ansible-lab
 
 # generate RSA key pair to allow master to communicate with managed nodes
 # and set a password to access master01 directly from ssh client 
-RUN chmod 600 /root/.ssh/config && mkdir keys && ssh-keygen -t rsa -C "master01 key" -f keys/master01_key && echo ansiblelab | passwd --stdin root
+RUN chmod 600 /root/.ssh/config && mkdir keys && ssh-keygen -t rsa -C "master01 key" -f keys/master01_key -P "" && echo ansiblelab | passwd --stdin root
 
 EXPOSE 22

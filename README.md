@@ -2,10 +2,11 @@
 
 This project is based on the work of LMtx (https://github.com/LMtx/ansible-lab-docker.git). Here the changes:
 
-* switched base image from Ubuntu to Centos 7 with systemd
+* upgraded to ansible 2.9
+* switched base image from Ubuntu to Centos 8 with systemd
 * removed ssh-agent and password protection for ssh key
 * added ansible.cfg in lab directory for custom configuration and inventory
-* created all-in-one Vagrant machine (centos7 + docker + containers) for users can't install docker
+* created all-in-one Vagrant machine (centos8 + docker + containers) for users can't install docker
 * added port-forward to access master01 container directly from the host (root@localhost:1022)
 * added "screen" (teminal multiplexer) to have an overview of all four "servers" from a single terminal window
 * added port-forward to access host01, host02 and host03 containers on port 80 directly from the host (http://localhost:8001, 8002 and 8003)

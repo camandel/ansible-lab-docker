@@ -1,106 +1,119 @@
 ---
-- hosts: db
-  tasks:
-   - name: install mariadb and requirements
-     yum:
-       name: [ mariadb-server, MySQL-python ]
-       state: present
-   - name: start mariadb
-     service:
-       name: mariadb
-       state: started
-       enabled: true
-   - name: create database
-     mysql_db:
-       name: mydb
-       state: present
-   - name: create user
-     mysql_user:
-       name: myuser
-       state: present
-       password: mypassword
-       priv: 'mydb.*:ALL'
-       host: '{{ item }}'
-     with_items:
-       - "%"
-       - localhost
-   - name: Copy database dump file
-     copy:
-       src: /opt/ansible-lab/examples/fe-be-db/dump.sql
-       dest: /tmp
-   - name: Restore database
-     mysql_db:
-      name: mydb
-      state: import
-      target: /tmp/dump.sql
-      login_user: myuser
-      login_password: mypassword
-
-- hosts: be
-  tasks:
-   - name: install python modules
-     yum:
-       name: [ python-flask, MySQL-python ]
-       state: present
-   - name: Copy main application
-     copy:
-       src: /opt/ansible-lab/examples/fe-be-db/app/
-       dest: /tmp/app/
-     notify: restart_app
-   - name: Copy application service
-     copy:
-       src: /opt/ansible-lab/examples/fe-be-db/app.service
-       dest: /lib/systemd/system/app.service
-     notify: restart_app
-   - name: Reload daemon
-     command: systemctl daemon-reload
-   - name: start app
-     service:
-       name: app
-       state: started
-       enabled: true
-   - name: check be page
-     uri:
-       url: "http://{{ item }}:5000"
-     with_items: "{{ groups['be'] }}"
-     delegate_to: localhost
-     run_once: true
-
-  handlers:
-    - name: restart_app
-      service:
-        name: app
-        state: restarted
-
-- hosts: fe
-  tasks:
-    - name: add EPEL repo
-      yum:
-        name: epel-release.noarch
-        state: present
-    - name: Install nginx
-      yum:
-        name: nginx
-        state: present
-    - name: create index.html
-      template:
-        src: /opt/ansible-lab/examples/fe-be-db/nginx.conf.j2
-        dest: /etc/nginx/nginx.conf
-      notify: restart_nginx
-    - name: start and enable nginx
-      service:
-        name: nginx
-        state: started
-        enabled: true
-    - name: check fe page
-      uri:
-        url: "http://{{ item }}"
-      with_items: "{{ groups['fe'] }}"
-      delegate_to: localhost
-      run_once: true
-
-  handlers:
-    - name: restart_nginx
-      service:
-        name: nginx
-        state: restarted
+  - hosts: db
+    tasks:
+     - name: install EPEL repositories
+       dnf:
+         name: [ epel-release ]
+         state: present
+     - name: install mariadb and requirements
+       dnf:
+         name: [ mariadb-server, python3-mysqlclient ]
+         state: present
+     - name: start mariadb
+       service:
+         name: mariadb
+         state: started
+         enabled: true
+     - name: create database
+       mysql_db:
+         name: mydb
+         state: present
+     - name: create user
+       mysql_user:
+         name: myuser
+         state: present
+         password: mypassword
+         priv: 'mydb.*:ALL'
+         host: '{{ item }}'
+       with_items:
+         - "%"
+         - localhost
+     - name: Copy database dump file
+       copy:
+         src: /opt/ansible-lab/examples/fe-be-db/dump.sql
+         dest: /tmp
+         mode: 0600
+     - name: Restore database
+       mysql_db:
+        name: mydb
+        state: import
+        target: /tmp/dump.sql
+        login_user: myuser
+        login_password: mypassword
+  
+  - hosts: be
+    tasks:
+     - name: install EPEL repositories
+       dnf:
+         name: [ epel-release ]
+         state: present
+     - name: install python modules
+       dnf:
+         name: [ python3-flask, python3-mysqlclient ]
+         state: present
+     - name: Copy main application
+       copy:
+         src: /opt/ansible-lab/examples/fe-be-db/app/
+         dest: /tmp/app/
+         mode: 0600
+       notify: restart_app
+     - name: Copy application service
+       copy:
+         src: /opt/ansible-lab/examples/fe-be-db/app.service
+         dest: /lib/systemd/system/app.service
+         mode: 0600
+       notify: restart_app
+     - name: Reload daemon
+       command: systemctl daemon-reload
+     - name: start app
+       service:
+         name: app
+         state: started
+         enabled: true
+     - name: check be page
+       uri:
+         url: "http://{{ item }}:5000"
+       with_items: "{{ groups['be'] }}"
+       delegate_to: localhost
+       run_once: true
+  
+    handlers:
+      - name: restart_app
+        service:
+          name: app
+          state: restarted
+  
+  - hosts: fe
+    tasks:
+      - name: add EPEL repo
+        dnf:
+          name: epel-release.noarch
+          state: present
+      - name: Install nginx
+        dnf:
+          name: nginx
+          state: present
+      - name: create index.html
+        template:
+          src: /opt/ansible-lab/examples/fe-be-db/nginx.conf.j2
+          dest: /etc/nginx/nginx.conf
+          mode: 0600
+        notify: restart_nginx
+      - name: start and enable nginx
+        service:
+          name: nginx
+          state: started
+          enabled: true
+      - name: check fe page
+        uri:
+          url: "http://{{ item }}"
+        with_items: "{{ groups['fe'] }}"
+        delegate_to: localhost
+        run_once: true
+  
+    handlers:
+      - name: restart_nginx
+        service:
+          name: nginx
+          state: restarted
+  

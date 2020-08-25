@@ -2,13 +2,14 @@
 - hosts: web
   tasks:
     - name: Install httpd
-      yum:
+      dnf:
         name: httpd
         state: present
     - name: create index.html
       template:
          src: /opt/ansible-lab/examples/lb-with-web/index.html.j2
          dest: /var/www/html/index.html
+         mode: 0644
       notify: restart_httpd
     - name: start and enable httpd
       service:
@@ -31,17 +32,18 @@
 - hosts: lb
   tasks:
     - name: add EPEL repo
-      yum:
-        name: epel-release.noarch
+      dnf:
+        name: epel-release
         state: present
     - name: Install nginx
-      yum:
+      dnf:
         name: nginx
         state: present
     - name: create index.html
       template:
         src: /opt/ansible-lab/examples/lb-with-web/nginx.conf.j2
         dest: /etc/nginx/nginx.conf
+        mode: 0644
       notify: restart_nginx
     - name: start and enable nginx
       service:

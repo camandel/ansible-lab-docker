@@ -3,7 +3,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python /tmp/app/app.py
+ExecStart=/usr/bin/python3 /tmp/app/app.py
 
 [Install]
 WantedBy=multi-user.target
